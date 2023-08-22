@@ -1,23 +1,27 @@
-#include <unistd.h>
+#include "main.h"
 
 /**
- * _putchar - writes the character c to stdout
- * @c: The character to print
+ * _putstr - writes the character c to stdout
+ * @v_arguments: The character to print
  *
  * Return: On success 1.
  * On error, -1 is returned, and errno is set appropriately.
  */
-int _putchar(char c);
-
-int _putstr(char *string)
+int _putstr(va_list v_arguments)
 {
-  unsigned int i, _str = 0;
-  
-	for (i = 0; string[i] != '\0'; i++)
-    {
-      _putchar(string[i]);
-        _str++;
-    }
-  // _putchar('\n');
-  return (_str);
+	unsigned int i;
+	char *str;
+	char nill[] = "(null)";
+
+	str = va_arg(v_arguments, char *);
+	if (!str)
+	{
+		for (i = 0; nill[i]; i++)
+			_putchar(nill[i]);
+	}
+	for (i = 0; str[i] != '\0'; i++)
+	{
+		_putchar(str[i]);
+	}
+		return (i);
 }

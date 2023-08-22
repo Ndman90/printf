@@ -1,55 +1,48 @@
-#include <unistd.h>
-#include <stdarg.h>
 #include "main.h"
-#include <stdio.h>
-
-
+/**
+ * _printf - prints input arguments
+ * @format: input argument
+ * Return: length of input
+ */
 int _printf(const char *format, ...)
 {
-  va_list v_arguments;
+	va_list v_arguments;
+	unsigned int i = 0, len = 0;
+	int (*f)(va_list);
 
-  if (format == NULL)
-    return (-1);
-
-  va_start(v_arguments, format);
-
-  unsigned int i, len = 0, value = 0, str_len = 0, int_len, bi_len;
-  
-  for (i = 0; format[i] != '\0'; i++,  len++)
-    {
-      if (format[i] != '%')
-      {
-        _putchar(format[i]);
-      }
-      else
-      {
-        if (format[i + 1] == 'c')
-         _putchar(va_arg(v_arguments, int));
-        if (format[i + 1] == 's')
-        {
-          str_len = _putstr(va_arg(v_arguments, char *));
-          len = (len + str_len - 2);
-        }
-        if (format[i + 1] == '%')
-          _putchar(format[i + 1]);
-        if (format[i + 1] == 'd' || format[i + 1] == 'i')
-        {
-          int_len = _putint(va_arg(v_arguments, int));
-          len = len + int_len;
-        }
-        if (format[i + 1] == 'b')
-        {
-          print_binary(va_arg(v_arguments, int));
-          len = len + bi_len;
-        }  
-        if (format[i + 1] == 'u')
-        {
-          int_len = printu_int(va_arg(v_arguments, unsigned int));
-          len = len + int_len;
-        }
-        i++;
-      }
-    }
-  va_end(v_arguments);
-  return (len);
+	va_start(v_arguments, format);
+	if (!format || (format[i] == '%' && !format[i + 1]))
+		return (-1);
+	if (!format[i])
+		return (0);
+	for (i = 0; format && format[i] != '\0'; i++)
+	{
+		if (format[i] == '%')
+		{
+			if (format[i + 1] == '\0')
+			{
+				_putchar(format[i]);
+				return (-1);
+			}
+				f = print_func(format, i + 1);
+				if (!f)
+				{
+					if (format[i + 1] == ' ' && !format[i + 2])
+						return (-1);
+					else
+					{
+						_putchar(format[i]), len++, i--;
+					}
+				} else
+				{
+					len += f(v_arguments);
+				}
+			i++;
+		} else
+		{
+			_putchar(format[i]), len++;
+		}
+	}
+	va_end(v_arguments);
+	return (len);
 }
