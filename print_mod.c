@@ -8,8 +8,9 @@
 int print_mod(va_list v_arguments)
 {
 	unsigned int len = 0;
+	char c = va_arg(v_arguments, int);
 
-	if (v_arguments)
+	if (c)
 	{
 		_putchar('%');
 		len++;
